@@ -1,0 +1,18 @@
+﻿version: "3.8"
+
+services:
+  mysql:
+    build: .
+    container_name: transport_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: transport_db
+      MYSQL_USER: chatbot
+      MYSQL_PASSWORD: chatbotpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
