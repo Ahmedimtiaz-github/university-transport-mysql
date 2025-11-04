@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 set -e
 
 # Use the PORT provided by Render; default to 8080 if not set
