@@ -1,15 +1,16 @@
-﻿#!/bin/bash
+#!/bin/bash
 set -e
 
-# Use Render's port or default to 8080
-PORT="${PORT:-8080}"
-
-# Start lightweight HTTP server (background)
-python3 -m http.server "$PORT" --bind 0.0.0.0 >/var/log/http_server.log 2>&1 &
-
-# Ensure MySQL data directory exists and owned properly
+echo "$(date) - Ensuring /data/mysql exists and is owned by mysql:mysql"
 mkdir -p /data/mysql
 chown -R mysql:mysql /data/mysql
 
-# Start MySQL with correct data directory
-exec mysqld --datadir=/data/mysql
+# Initialize DB if empty
+if [ ! -d "/data/mysql/mysql" ]; then
+  echo "$(date) - No existing DB found; initializing insecurely (you can change later)"
+  mysqld --initialize-insecure --datadir=/data/mysql
+  echo "$(date) - Initialization complete"
+fi
+
+# Start MySQL using custom data directory as the mysql user
+exec mysqld --datadir=/data/mysql --user=mysql
